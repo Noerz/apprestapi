@@ -1,5 +1,7 @@
 'use strict';
 
+const { json } = require('body-parser');
+
 module.exports=function(app){
     var jsonku=require('../controrller/controller');
 
@@ -11,4 +13,7 @@ module.exports=function(app){
 
     app.route('/tampil/:id')
         .get(jsonku.tampilberdasarkanid);
+
+    app.route('/tambah')
+        .post(jsonku.tambahmahasiswa);
 }
