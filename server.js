@@ -1,20 +1,35 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-var morgan = require('morgan');
-const app = express();
+const morgan = require('morgan');
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-app.use(morgan('dev'));
+class WebApp {
+  constructor() {
+    this.app = express();
+    this.port = 3000;
+    this.initMiddlewares();
+    this.initRoutes();
+  }
 
-//panggil routes
-var routes = require('./routes/routes');
-var port = 3000;
-routes(app);
+  initMiddlewares() {
+    this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(bodyParser.json());
+    this.app.use(morgan('dev'));
+  }
 
-//daftar menu routes dari index
-app.use('/auth',require('./middleware'));
+  initRoutes() {
+    // Panggil routes
+    const routes = require('./routes/routes');
+    this.app.use('/auth', require('./middleware'));
+    routes(this.app);
+  }
 
-app.listen(port, () => {
-    console.log(`Server started on port `+ port);
-});
+  start() {
+    this.app.listen(this.port, () => {
+      console.log(`Server started on port ` + this.port);
+    });
+  }
+}
+
+// Inisialisasi aplikasi
+const webApp = new WebApp();
+webApp.start();
